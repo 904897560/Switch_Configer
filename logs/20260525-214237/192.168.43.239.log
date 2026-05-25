@@ -1,0 +1,8 @@
+=== host: 192.168.43.239 ===
+=== time: 2026-05-25 21:42:37 ===
+=== user: admin ===
+spawn ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o PreferredAuthentications=password,keyboard-interactive -o PubkeyAuthentication=no -o NumberOfPasswordPrompts=1 -o ConnectTimeout=15 -p 22 admin@192.168.43.239
+Unable to negotiate with 192.168.43.239 port 22: no matching host key type found. Their offer: ssh-rsa
+
+!!! connection closed
+=== rc: 4 ===

@@ -1,0 +1,5 @@
+# one command per line; lines starting with # are skipped
+terminal length 0
+show version | in System serial number 
+# show run                # Cisco
+# show running-config     # Cisco
