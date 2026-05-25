@@ -80,9 +80,10 @@ set password $env(PASSWD)
 set port     $env(PORT)
 set cmdsfile $env(CMDS_FILE)
 
-# Generic prompt: matches a line ending in >, #, $, or ] (Cisco/Huawei/H3C/Juniper/Linux-shell switches)
-# Allow trailing whitespace/newlines because expect's buffer often includes a final \r\n
-set PROMPT {[^\r\n]*[>#\$\]]\s*$}
+# Generic prompt: a prompt-terminating char (], #, >, $) followed by anything non-alphanumeric
+# until end-of-buffer. Tolerates trailing space, CR, LF, or ANSI escape codes.
+# NOTE: ']' must be the FIRST char in the class (Tcl/expect quirk: \] inside [...] is unreliable).
+set PROMPT {[]#>$][^[:alnum:]]*\Z}
 
 spawn ssh -o StrictHostKeyChecking=no \
           -o UserKnownHostsFile=/dev/null \
@@ -90,7 +91,7 @@ spawn ssh -o StrictHostKeyChecking=no \
           -o PubkeyAuthentication=no \
           -o NumberOfPasswordPrompts=1 \
           -o ConnectTimeout=15 \
-		  -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa \
+          -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa \
           -p $port $user@$host
 
 expect {
@@ -100,6 +101,11 @@ expect {
     timeout                  { puts "\n!!! connect timeout"; exit 3 }
     eof                      { puts "\n!!! connection closed"; exit 4 }
 }
+
+# After password, drain banner/MOTD then poke an extra CR to force a fresh prompt
+# anchored at the end of the buffer.
+sleep 1
+send -- "\r"
 
 expect {
     -re $PROMPT              { }

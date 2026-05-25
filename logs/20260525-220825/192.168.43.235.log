@@ -1,0 +1,53 @@
+=== host: 192.168.43.235 ===
+=== time: 2026-05-25 22:08:25 ===
+=== user: admin ===
+spawn ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o PreferredAuthentications=password,keyboard-interactive -o PubkeyAuthentication=no -o NumberOfPasswordPrompts=1 -o ConnectTimeout=15 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -p 22 admin@192.168.43.235
+Warning: Permanently added '192.168.43.235' (RSA) to the list of known hosts.
+admin@192.168.43.235's password: 
+
+
+Last login: May 25 2026 13:43:55 from 192.168.50.19 through ssh.
+S-leaf12#
+S-leaf12#terminal length 0
+S-leaf12#screen-length 0 temporary
+% Unknown command.
+
+S-leaf12#screen-length disable
+% Unknown command.
+
+S-leaf12#screen-length 0
+
+Translating "screen-length"...
+% Unrecognized host or address, or protocol not running.
+S-leaf12#set cli screen-length 0
+% Unknown command.
+
+S-leaf12#no page
+            ^
+% Invalid input detected at '^' marker.
+
+S-leaf12#stty rows 1000
+% Unknown command.
+
+S-leaf12#terminal length 0
+S-leaf12#show version
+System description      : Ruijie Full 400G Routing Switch(S6980-64QC) By Ruijie Networks
+System start time       : 2026-04-16 11:12:53
+System uptime           : 39:02:39:52
+System hardware version : 2.00
+System software version : S6980_RGOS 12.5(1)B0606S7
+System patch number     : NA
+System serial number    : G1T522G000526
+System bios version     : 1.0.6(Master) 1.0.6(Slave)
+System rboot version    : 1.3.28
+Module information:
+  Slot 0 : RG-S6980-64QC
+    System uptime       : 39:02:39:52
+    Hardware version    : 2.00
+    Bios version        : 1.0.6(Master) 1.0.6(Slave)
+    Rboot version       : 1.3.28
+    Software version    : S6980_RGOS 12.5(1)B0606S7
+    Serial number       : G1T522G000526
+S-leaf12#exit
+Connection to 192.168.43.235 closed.
+=== rc: 0 ===

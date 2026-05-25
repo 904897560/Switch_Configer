@@ -1,12 +1,0 @@
-=== host: 192.168.43.223 ===
-=== time: 2026-05-25 21:55:10 ===
-=== user: admin ===
-spawn ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o PreferredAuthentications=password,keyboard-interactive -o PubkeyAuthentication=no -o NumberOfPasswordPrompts=1 -o ConnectTimeout=15 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -p 22 admin@192.168.43.223
-Warning: Permanently added '192.168.43.223' (RSA) to the list of known hosts.
-admin@192.168.43.223's password: 
-
-
-Last login: May 25 2026 13:28:31 from 192.168.50.19 through ssh.
-S-leaf14#
-!!! login timeout
-=== rc: 3 ===
