@@ -1,0 +1,1130 @@
+=== host: 10.237.0.215 ===
+=== hostname: LG-CMC-B4R202-A01U44-RGS6510-YL0-05003 ===
+=== time: 2026-05-27 16:34:04 ===
+=== user: admin001 ===
+spawn ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o PreferredAuthentications=password,keyboard-interactive -o PubkeyAuthentication=no -o NumberOfPasswordPrompts=1 -o ConnectTimeout=15 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -p 22 admin001@10.237.0.215
+Warning: Permanently added '10.237.0.215' (RSA) to the list of known hosts.
+admin001@10.237.0.215's password: 
+
+
+LG-CMC-B4R202-A01U44-RGS6510-YL0-05003#
+LG-CMC-B4R202-A01U44-RGS6510-YL0-05003#terminal length 0
+LG-CMC-B4R202-A01U44-RGS6510-YL0-05003#show run
+
+Building configuration...
+Current configuration : 27990 bytes
+
+version 11.0(5)B9P128S10
+hostname LG-CMC-B4R202-A01U44-RGS6510-YL0-05003
+!
+errdisable recovery interval 30
+ethernet-port counter sample-period 1
+physical-port dither period 10 threshold 5 period-times 1
+load-balance-profile default
+ ipv4 field src-ip dst-ip protocol l4-src-port l4-dst-port src-port
+ ipv6 field src-ip dst-ip protocol l4-src-port l4-dst-port src-port
+!
+mac-address-table aging-time 1800
+mac-address-table flapping-logging
+lacp individual-timeout period 60
+spanning-tree mode rstp
+spanning-tree mst 0 priority 4096
+spanning-tree v-stp enable
+spanning-tree
+!
+class-map arp-no-hw-forwarding
+ match access-group arp-no-hw-forwarding
+!
+policy-map arp-no-hw-forwarding
+ class arp-no-hw-forwarding
+  police 0 0 exceed-action drop
+!
+service-policy output arp-no-hw-forwarding
+!
+link state track 1 up-delay 120
+!
+route-map Network-Route permit 10
+ set community 1:1
+!
+route-map Loopback permit 10
+ set community 1:3
+!
+mac access-list extended arp-no-hw-forwarding
+ 10 permit any any arp 
+!
+vrf definition MGT
+ address-family ipv4
+  exit-address-family
+!
+username admin001 privilege 15 password 7 041e16032d020f4741735044
+username guest001 password 7 041e16032d020f4741735045
+username netops001 privilege 15 password 7 041e16032d020f474173504a
+username netops001 login mode ssh
+!
+no auto-provision
+service dhcp
+ip helper-address 10.237.11.181
+!
+install 0 RG-S6510-48VS8CQ
+!
+sysmac 7085.6c4c.f6d1
+!
+nfpp
+!
+no parity-ecc-error auto-recover enable
+mtu forwarding 9216
+!
+service password-encryption
+!
+redundancy
+!
+ip ssh cipher-mode cbc ctr
+ip ssh hmac-algorithm sha2-256 sha2-512
+ip ssh version 2
+service standard-syslog
+service sysname
+service sequence-numbers
+service timestamps debug datetime msec
+service timestamps log datetime msec
+logging userinfo command-log
+logging file flash:syslog 
+logging flash interval 1
+logging source interface Mgmt 0
+logging facility local4
+logging server 1.1.1.1 vrf MGT
+logging server 10.252.249.17 vrf MGT
+dmesg collect enable
+dmesg size set 300
+clock timezone beijing +8 0
+cpu history-top set size 10
+memory history-top set size 10
+!
+login privilege log
+enable password 7 0531083b102e35407451471c
+enable service ssh-server
+!
+vlan 2
+ name YW
+!
+vlan 4094
+ name Peer-link
+!
+vlan range 1,13,17,200,4093
+!
+interface TFGigabitEthernet 0/1
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 1 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/2
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 2 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/3
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 3 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/4
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 4 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/5
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 5 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/6
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 6 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/7
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 7 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/8
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 8 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/9
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 9 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/10
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 10 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/11
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 11 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/12
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 12 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/13
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 13 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/14
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 14 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/15
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 15 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/16
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 16 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/17
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 17 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/18
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 18 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/19
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 19 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/20
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 20 mode active
+ switchport access vlan 17
+ lacp individual-port enable
+ spanning-tree portfast
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/21
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 21 mode active
+ switchport access vlan 2
+ lacp individual-port enable
+ spanning-tree portfast
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/22
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 22 mode active
+ switchport access vlan 2
+ lacp individual-port enable
+ spanning-tree portfast
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/23
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 23 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/24
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 24 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/25
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 25 mode active
+ switchport access vlan 2
+ lacp individual-port enable
+ spanning-tree portfast
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/26
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 26 mode active
+ switchport access vlan 2
+ lacp individual-port enable
+ spanning-tree portfast
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/27
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 27 mode active
+ switchport access vlan 2
+ lacp individual-port enable
+ spanning-tree portfast
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/28
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 28 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/29
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 29 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/30
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 30 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/31
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 31 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/32
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 32 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/33
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 33 mode active
+ switchport access vlan 2
+ lacp individual-port enable
+ spanning-tree portfast
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/34
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 34 mode active
+ switchport access vlan 2
+ lacp individual-port enable
+ spanning-tree portfast
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/35
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 35 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/36
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 36 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/37
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 37 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/38
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 38 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/39
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 39 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/40
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 40 mode active
+ switchport access vlan 2
+ lacp individual-port enable
+ spanning-tree portfast
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/41
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 41 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/42
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 42 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/43
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 43 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/44
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+!
+interface TFGigabitEthernet 0/45
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 45 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/46
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ port-group 46 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface TFGigabitEthernet 0/47
+ port speed-mode 10G
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+!
+interface TFGigabitEthernet 0/48
+ port speed-mode 10G
+ no switchport
+ description Comm-Server-2
+ carrier-delay up 2 down 0
+ ip address 169.254.0.0 255.255.255.254
+!
+interface HundredGigabitEthernet 0/49
+ carrier-delay up 2 down 0
+ port-group 127 mode active
+!
+interface HundredGigabitEthernet 0/50
+ carrier-delay up 2 down 0
+ port-group 127 mode active
+!
+interface HundredGigabitEthernet 0/51
+ no switchport
+ carrier-delay up 2 down 0
+ link state group 1 upstream
+ ip address 10.237.2.44 255.255.255.254
+!
+interface HundredGigabitEthernet 0/52
+ no switchport
+ carrier-delay up 2 down 0
+ link state group 1 upstream
+ ip address 10.237.2.46 255.255.255.254
+!
+interface HundredGigabitEthernet 0/53
+ description wangzelin-test
+ carrier-delay up 2 down 0
+ port-group 53 mode active
+ switchport access vlan 17
+ lacp individual-port enable
+ spanning-tree portfast
+ link state group 1 downstream
+!
+interface HundredGigabitEthernet 0/54
+ description wangzelin-test
+ carrier-delay up 2 down 0
+ port-group 54 mode active
+ lacp individual-port enable
+ link state group 1 downstream
+!
+interface HundredGigabitEthernet 0/55
+ carrier-delay up 2 down 0
+!
+interface HundredGigabitEthernet 0/56
+ carrier-delay up 2 down 0
+!
+interface AggregatePort 1
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 1
+!
+interface AggregatePort 2
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 2
+!
+interface AggregatePort 3
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 3
+!
+interface AggregatePort 4
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 4
+!
+interface AggregatePort 5
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 5
+!
+interface AggregatePort 6
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 6
+!
+interface AggregatePort 7
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 7
+!
+interface AggregatePort 8
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 8
+!
+interface AggregatePort 9
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 9
+!
+interface AggregatePort 10
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 10
+!
+interface AggregatePort 11
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 11
+!
+interface AggregatePort 12
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 12
+!
+interface AggregatePort 13
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 13
+!
+interface AggregatePort 14
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 14
+!
+interface AggregatePort 15
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 15
+!
+interface AggregatePort 16
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 16
+!
+interface AggregatePort 17
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 17
+!
+interface AggregatePort 18
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 18
+!
+interface AggregatePort 19
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description wangzelin-test
+ switchport access vlan 17
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 19
+!
+interface AggregatePort 20
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description wangzelin-test
+ switchport access vlan 17
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 20
+!
+interface AggregatePort 21
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 21
+!
+interface AggregatePort 22
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 22
+!
+interface AggregatePort 23
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 23
+!
+interface AggregatePort 24
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 24
+!
+interface AggregatePort 25
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 25
+!
+interface AggregatePort 26
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 26
+!
+interface AggregatePort 27
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 27
+!
+interface AggregatePort 28
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 28
+!
+interface AggregatePort 29
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 29
+!
+interface AggregatePort 30
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 30
+!
+interface AggregatePort 31
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 31
+!
+interface AggregatePort 32
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 32
+!
+interface AggregatePort 33
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 33
+!
+interface AggregatePort 34
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 34
+!
+interface AggregatePort 35
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 35
+!
+interface AggregatePort 36
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 36
+!
+interface AggregatePort 37
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 37
+!
+interface AggregatePort 38
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 200
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 38
+!
+interface AggregatePort 39
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 200
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 39
+!
+interface AggregatePort 40
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 40
+!
+interface AggregatePort 41
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport mode trunk
+ switchport trunk allowed vlan only 13
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 41
+!
+interface AggregatePort 42
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport mode trunk
+ switchport trunk allowed vlan only 13
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 42
+!
+interface AggregatePort 43
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport mode trunk
+ switchport trunk allowed vlan only 13
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 43
+!
+interface AggregatePort 44
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 44
+!
+interface AggregatePort 45
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 45
+!
+interface AggregatePort 46
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description Comm-Server-2
+ switchport access vlan 2
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 46
+!
+interface AggregatePort 53
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description wangzelin-test
+ switchport access vlan 17
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 53
+!
+interface AggregatePort 54
+ storm-control broadcast pps 0
+ storm-control multicast pps 0
+ storm-control unicast pps 0
+ description wangzelin-test
+ switchport access vlan 17
+ spanning-tree bpduguard enable
+ spanning-tree portfast
+ vap 54
+!
+interface AggregatePort 127
+ no mac-address-learning
+ switchport mode trunk
+ switchport trunk allowed vlan only 2-4094
+ peer-link
+!
+interface Loopback 0
+ ip address 10.237.9.15 255.255.255.255
+!
+interface VLAN 2
+ local-proxy-arp
+ ip address 10.237.11.2 255.255.255.0
+ vrrp 1 ip 10.237.11.1
+ arp timeout 90
+ vrrp mode dual-active
+ ip dhcp relay source 10.237.11.1
+!
+interface VLAN 13
+ local-proxy-arp
+ ip address 10.237.13.2 255.255.255.128
+ vrrp 2 ip 10.237.13.1
+ arp timeout 90
+ vrrp mode dual-active
+!
+interface VLAN 17
+ local-proxy-arp
+ ip address 10.237.17.2 255.255.255.0
+ vrrp 1 ip 10.237.17.1
+ arp timeout 90
+ vrrp mode dual-active
+ ip dhcp relay source 10.237.17.1
+!
+interface VLAN 200
+ local-proxy-arp
+ ip address 10.237.13.253 255.255.255.192
+ vrrp 3 ip 10.237.13.193
+ arp timeout 90
+ vrrp mode dual-active
+!
+interface VLAN 4094
+ ip address 169.254.0.2 255.255.255.254
+!
+interface Mgmt 0
+ vrf forwarding MGT
+ ip address 10.237.0.215 255.255.255.0
+ gateway 10.237.0.1
+!
+router bgp 5003
+ bgp router-id 10.237.9.15
+ bgp bestpath as-path multipath-relax
+ bgp log-neighbor-changes
+ bgp graceful-restart restart-time 120
+ bgp graceful-restart stalepath-time 360
+ bgp graceful-restart
+ bgp initial-advertise-delay 120 180
+ neighbor SH-LG-YL0 peer-group
+ neighbor SH-LG-YL0 advertisement-interval 0
+ neighbor SH-LG-YL0 update-delay 120
+ neighbor 10.237.2.45 remote-as 7001
+ neighbor 10.237.2.45 peer-group SH-LG-YL0
+ neighbor 10.237.2.47 remote-as 7002
+ neighbor 10.237.2.47 peer-group SH-LG-YL0
+ address-family ipv4
+  maximum-paths ebgp 32
+  maximum-paths ibgp 32
+  distance bgp 20 200 10
+  network 10.237.9.15 mask 255.255.255.255 route-map Loopback
+  network 10.237.11.0 mask 255.255.255.0 route-map Network-Route
+  network 10.237.13.0 mask 255.255.255.128 route-map Network-Route
+  network 10.237.13.192 mask 255.255.255.192 route-map Network-Route
+  network 10.237.17.0 mask 255.255.255.0 route-map Network-Route
+  neighbor SH-LG-YL0 activate
+  neighbor SH-LG-YL0 send-community both
+  neighbor SH-LG-YL0 soft-reconfiguration inbound
+  exit-address-family
+!
+ntp server vrf MGT 1.1.1.1 source Mgmt 0
+!
+arp reply-auto-learning enable
+!
+vap domain 1
+ no fast-convergence
+ data-sync local 169.254.0.2 peer 169.254.0.3
+ peer-keepalive local 169.254.0.0 peer 169.254.0.1
+ dual-active auto recovery
+!
+snmp-server trap-source Mgmt 0
+snmp-server enable traps
+no snmp-server enable version v1
+snmp-server community 7 10250725091b495c1e1b25291644 ro 
+!
+line console 0
+ login local
+line vty 0 15
+ transport input ssh 
+ logging synchronous
+ exec-timeout 0 0
+ privilege level 15
+ login local
+ width 256
+!
+end
+LG-CMC-B4R202-A01U44-RGS6510-YL0-05003#exit
+Connection to 10.237.0.215 closed.
+=== rc: 0 ===

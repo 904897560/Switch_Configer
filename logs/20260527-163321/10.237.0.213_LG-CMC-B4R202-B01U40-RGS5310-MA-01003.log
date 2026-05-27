@@ -1,0 +1,9 @@
+=== host: 10.237.0.213 ===
+=== hostname: LG-CMC-B4R202-B01U40-RGS5310-MA-01003 ===
+=== time: 2026-05-27 16:33:21 ===
+=== user: admin001 ===
+spawn ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o PreferredAuthentications=password,keyboard-interactive -o PubkeyAuthentication=no -o NumberOfPasswordPrompts=1 -o ConnectTimeout=15 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -p 22 admin001@10.237.0.213
+ssh: connect to host 10.237.0.213 port 22: Connection timed out
+
+!!! connection closed
+=== rc: 4 ===

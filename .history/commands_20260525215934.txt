@@ -1,5 +1,5 @@
 # one command per line; lines starting with # are skipped
-screen-length disable
-dis current-configuration 
+terminal length 0
+show version
 # show run                # Cisco
 # show running-config     # Cisco

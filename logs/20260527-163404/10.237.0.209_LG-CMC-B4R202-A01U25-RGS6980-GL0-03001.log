@@ -1,0 +1,2184 @@
+=== host: 10.237.0.209 ===
+=== hostname: LG-CMC-B4R202-A01U25-RGS6980-GL0-03001 ===
+=== time: 2026-05-27 16:34:04 ===
+=== user: admin001 ===
+spawn ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o PreferredAuthentications=password,keyboard-interactive -o PubkeyAuthentication=no -o NumberOfPasswordPrompts=1 -o ConnectTimeout=15 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -p 22 admin001@10.237.0.209
+Warning: Permanently added '10.237.0.209' (RSA) to the list of known hosts.
+admin001@10.237.0.209's password: 
+
+
+Last login: Apr 22 2026 14:02:10 from 10.10.192.57 through ssh.
+LG-CMC-B4R202-A01U25-RGS6980-GL0-03001#
+LG-CMC-B4R202-A01U25-RGS6980-GL0-03001#terminal length 0
+LG-CMC-B4R202-A01U25-RGS6980-GL0-03001#show run
+
+Building configuration...
+Current configuration: 77190 bytes
+
+version S6980_RGOS 12.5(1)B0606S7
+hostname LG-CMC-B4R202-A01U25-RGS6980-GL0-03001
+!
+mtu forwarding 9216
+ethernet-port counter sample-period 1
+split interface FHGigabitEthernet 0/1 split-type 2*200G
+split interface FHGigabitEthernet 0/2 split-type 2*200G
+split interface FHGigabitEthernet 0/3 split-type 2*200G
+split interface FHGigabitEthernet 0/4 split-type 2*200G
+split interface FHGigabitEthernet 0/5 split-type 2*200G
+split interface FHGigabitEthernet 0/6 split-type 2*200G
+split interface FHGigabitEthernet 0/7 split-type 2*200G
+split interface FHGigabitEthernet 0/8 split-type 2*200G
+split interface FHGigabitEthernet 0/9 split-type 2*200G
+split interface FHGigabitEthernet 0/10 split-type 2*200G
+split interface FHGigabitEthernet 0/11 split-type 2*200G
+split interface FHGigabitEthernet 0/12 split-type 2*200G
+split interface FHGigabitEthernet 0/13 split-type 2*200G
+split interface FHGigabitEthernet 0/14 split-type 2*200G
+split interface FHGigabitEthernet 0/15 split-type 2*200G
+split interface FHGigabitEthernet 0/16 split-type 2*200G
+split interface FHGigabitEthernet 0/17 split-type 2*200G
+split interface FHGigabitEthernet 0/18 split-type 2*200G
+split interface FHGigabitEthernet 0/19 split-type 2*200G
+split interface FHGigabitEthernet 0/20 split-type 2*200G
+split interface FHGigabitEthernet 0/21 split-type 2*200G
+split interface FHGigabitEthernet 0/22 split-type 2*200G
+split interface FHGigabitEthernet 0/23 split-type 2*200G
+split interface FHGigabitEthernet 0/24 split-type 2*200G
+split interface FHGigabitEthernet 0/25 split-type 2*200G
+split interface FHGigabitEthernet 0/26 split-type 2*200G
+split interface FHGigabitEthernet 0/27 split-type 2*200G
+split interface FHGigabitEthernet 0/28 split-type 2*200G
+split interface FHGigabitEthernet 0/29 split-type 2*200G
+split interface FHGigabitEthernet 0/33 split-type 2*200G
+split interface FHGigabitEthernet 0/43 split-type 2*200G
+ip-ref-load-balance-profile default
+ ipv4 field protocol src-port src-ip dst-ip l4-src-port l4-dst-port
+!
+lacp system-priority 200
+lacp individual-timeout period 60
+spanning-tree mode rstp
+spanning-tree
+priority-flow-control counting-interval 1
+priority-flow-control deadlock cos-value 5 detect 10 recover 100
+priority-flow-control deadlock limit frequency 5 period-second 20
+priority-flow-control deadlock limit cos-value 5 enable rx
+priority-flow-control deadlock counting-interval 1
+qos-queue compatible enable
+mls qos scheduler drr
+drr-queue bandwidth 1 2 3 90 30 15 0 0
+queueing wred
+!
+class-map RoCEv2-Data
+class-map RoCEv2-Cnp
+!
+policy-map RoCEv2
+ class RoCEv2-Data
+  set cos 5 priority
+ class RoCEv2-Cnp
+  set cos 6 priority
+!
+service-policy input RoCEv2
+!
+link state track 1 up-delay 60
+!
+expert access-list extended RoCEv2-Cnp
+ 10 permit udp any any any any eq 4791 dscp cs6 
+!
+expert access-list extended RoCEv2-Data
+ 10 permit udp any any any any eq 4791 dscp ef 
+!
+vrf definition MGT
+ address-family ipv4
+  exit-address-family
+!
+username admin001 privilege 15 password 7 $10$320$ryDi7F8f+ft66kw=$
+username guest001 privilege 1 password 7 $10$3b4$rXIt8byPBKdvnpY=$
+username netops001 privilege 15 password 7 $10$2be$gcXpL9HQzqg3uzE=$
+username netops001 login mode ssh
+!
+no auto-provision
+!
+service dhcp
+ip helper-address vrf MGT 10.237.11.181
+!
+ip dhcp relay information option82
+install 0 RG-S6980-64QC
+!
+sysmac d431.27e5.ea15
+!
+ids
+!
+nfpp
+!
+mmu sample-period buffer-counter 1
+mmu sample-period queue-counter 1
+mmu pg-headroom set 19640
+mmu usage-warn-limit set 90
+mmu queue-threshold output unicast 0 set 25
+mmu queue-threshold output unicast 1 set 25
+mmu queue-threshold output unicast 2 set 25
+mmu queue-threshold output unicast 4 set 25
+mmu queue-threshold output unicast 5 set 25
+no password policy printable-character-check
+no password policy min-size
+no password policy strong
+service password-encryption
+!
+redundancy
+!
+enable service snmp-agent
+ip ssh key-exchange dh_group_exchange_sha1 dh_group14_sha1 dh_group1_sha1 ecdh_sha2_nistp256 ecdh_sha2_nistp384 ecdh_sha2_nistp521 dh_group14_sha256 dh_group16_sha512 dh_group18_sha512 dh_group_exchange_sha256 curve25519_sha256@libssh.org curve25519_sha256
+ip ssh cipher-mode cbc ctr
+ip ssh hmac-algorithm sha2-256 sha2-512
+ip ssh version 2
+service standard-syslog
+service sysname
+service sequence-numbers
+service timestamps debug datetime msec
+service timestamps log datetime msec
+logging userinfo command-log
+logging file flash:syslog 
+logging source interface Mgmt 0
+logging facility local4
+logging server 1.1.1.1 vrf MGT udp-port 5140
+logging server 10.252.249.17 vrf MGT
+klog file-size 314572800
+dmesg collect enable
+dmesg size set 314572800
+clock timezone beijing +8 0
+cpu history-top set size 10
+memory history-top set size 10
+!
+login privilege log
+enable secret 8 $1c$7eyy23uMQk$:6`6:<bf.~,lznj|:4lhh*|`b,<|$!&d`jzp0:z4$ 
+enable password 7 $10$0a4$a5XecW7W8+jpvWI=$
+enable service ssh-server
+enable service telnet-server
+!
+vlan 2
+ name YW
+!
+vlan 1187
+ name GPU-POD
+!
+vlan 4094
+ name Peer-link
+!
+vlan 1
+!
+interface FHGigabitEthernet 0/1:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/1:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/2:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/2:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/3:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/3:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/4:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/4:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/5:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/5:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/6:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/6:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/7:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/7:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/8:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/8:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/9:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/9:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/10:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/10:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/11:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/11:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/12:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/12:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/13:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/13:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/14:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/14:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/15:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/15:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/16:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/16:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/17:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/17:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/18:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/18:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/19:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/19:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/20:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/20:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/21:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/21:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/22:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/22:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/23:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/23:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/24:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/24:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/25:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/25:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/26:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/26:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/27:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/27:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/28:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/28:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/29:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/29:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/33:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/33:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/43:1
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/43:2
+ carrier-delay up 2 down 0
+ switchport mode trunk
+ switchport trunk native vlan 2
+ switchport trunk allowed vlan only 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 300
+ mmu xoff-threshold pg 5 set 8
+ mmu xon-threshold-offset pg 5 set 12
+ mmu pg-guarantee pg 5 set 17
+!
+interface FHGigabitEthernet 0/30
+ carrier-delay up 2 down 0
+ switchport access vlan 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 30000
+ priority-flow-control early-warning 5 output pps 30000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 40000000
+ wrr-queue random-detect min-threshold cell 3 1500 1500
+ wrr-queue random-detect min-threshold cell 5 2000 2000
+ wrr-queue random-detect max-threshold cell 5 4000 4000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 600
+ mmu xoff-threshold pg 5 set 12
+ mmu xon-threshold-offset pg 5 set 18
+ mmu pg-guarantee pg 5 set 24
+!
+interface FHGigabitEthernet 0/31
+ carrier-delay up 2 down 0
+ switchport access vlan 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 30000
+ priority-flow-control early-warning 5 output pps 30000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 40000000
+ wrr-queue random-detect min-threshold cell 3 1500 1500
+ wrr-queue random-detect min-threshold cell 5 2000 2000
+ wrr-queue random-detect max-threshold cell 5 4000 4000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 600
+ mmu xoff-threshold pg 5 set 12
+ mmu xon-threshold-offset pg 5 set 18
+ mmu pg-guarantee pg 5 set 24
+!
+interface FHGigabitEthernet 0/32
+ carrier-delay up 2 down 0
+ switchport access vlan 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 30000
+ priority-flow-control early-warning 5 output pps 30000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 40000000
+ wrr-queue random-detect min-threshold cell 3 1500 1500
+ wrr-queue random-detect min-threshold cell 5 2000 2000
+ wrr-queue random-detect max-threshold cell 5 4000 4000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 600
+ mmu xoff-threshold pg 5 set 12
+ mmu xon-threshold-offset pg 5 set 18
+ mmu pg-guarantee pg 5 set 24
+!
+interface FHGigabitEthernet 0/34
+ carrier-delay up 2 down 0
+ switchport access vlan 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 30000
+ priority-flow-control early-warning 5 output pps 30000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 40000000
+ wrr-queue random-detect min-threshold cell 3 1500 1500
+ wrr-queue random-detect min-threshold cell 5 2000 2000
+ wrr-queue random-detect max-threshold cell 5 4000 4000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 600
+ mmu xoff-threshold pg 5 set 12
+ mmu xon-threshold-offset pg 5 set 18
+ mmu pg-guarantee pg 5 set 24
+!
+interface FHGigabitEthernet 0/35
+!
+interface FHGigabitEthernet 0/36
+!
+interface FHGigabitEthernet 0/37
+ speed 100G
+ carrier-delay up 2 down 0
+ switchport access vlan 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 7500
+ priority-flow-control early-warning 5 output pps 7500
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 10000000
+ wrr-queue random-detect min-threshold cell 3 375 375
+ wrr-queue random-detect min-threshold cell 5 500 500
+ wrr-queue random-detect max-threshold cell 5 1000 1000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 150
+ mmu xoff-threshold pg 5 set 3
+ mmu xon-threshold-offset pg 5 set 4
+ mmu pg-guarantee pg 5 set 6
+!
+interface FHGigabitEthernet 0/38
+ carrier-delay up 2 down 0
+ switchport access vlan 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 7500
+ priority-flow-control early-warning 5 output pps 7500
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 10000000
+ wrr-queue random-detect min-threshold cell 3 375 375
+ wrr-queue random-detect min-threshold cell 5 500 500
+ wrr-queue random-detect max-threshold cell 5 1000 1000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 150
+ mmu xoff-threshold pg 5 set 3
+ mmu xon-threshold-offset pg 5 set 4
+ mmu pg-guarantee pg 5 set 6
+!
+interface FHGigabitEthernet 0/39
+ carrier-delay up 2 down 0
+ switchport access vlan 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 7500
+ priority-flow-control early-warning 5 output pps 7500
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 10000000
+ wrr-queue random-detect min-threshold cell 3 375 375
+ wrr-queue random-detect min-threshold cell 5 500 500
+ wrr-queue random-detect max-threshold cell 5 1000 1000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 150
+ mmu xoff-threshold pg 5 set 3
+ mmu xon-threshold-offset pg 5 set 4
+ mmu pg-guarantee pg 5 set 6
+!
+interface FHGigabitEthernet 0/40
+ carrier-delay up 2 down 0
+ switchport access vlan 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 7500
+ priority-flow-control early-warning 5 output pps 7500
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 10000000
+ wrr-queue random-detect min-threshold cell 3 375 375
+ wrr-queue random-detect min-threshold cell 5 500 500
+ wrr-queue random-detect max-threshold cell 5 1000 1000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 150
+ mmu xoff-threshold pg 5 set 3
+ mmu xon-threshold-offset pg 5 set 4
+ mmu pg-guarantee pg 5 set 6
+!
+interface FHGigabitEthernet 0/41
+ carrier-delay up 2 down 0
+ switchport access vlan 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 7500
+ priority-flow-control early-warning 5 output pps 7500
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 10000000
+ wrr-queue random-detect min-threshold cell 3 375 375
+ wrr-queue random-detect min-threshold cell 5 500 500
+ wrr-queue random-detect max-threshold cell 5 1000 1000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 150
+ mmu xoff-threshold pg 5 set 3
+ mmu xon-threshold-offset pg 5 set 4
+ mmu pg-guarantee pg 5 set 6
+!
+interface FHGigabitEthernet 0/42
+ carrier-delay up 2 down 0
+ switchport access vlan 2
+ spanning-tree portfast
+ priority-flow-control early-warning 5 input pps 7500
+ priority-flow-control early-warning 5 output pps 7500
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 10000000
+ wrr-queue random-detect min-threshold cell 3 375 375
+ wrr-queue random-detect min-threshold cell 5 500 500
+ wrr-queue random-detect max-threshold cell 5 1000 1000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ mmu queue-threshold output unicast 0 set 25
+ mmu queue-threshold output unicast 1 set 25
+ mmu queue-threshold output unicast 2 set 25
+ mmu queue-threshold output unicast 4 set 25
+ mmu queue-threshold output unicast 5 set 25
+ mmu headroom-threshold pg 5 set 150
+ mmu xoff-threshold pg 5 set 3
+ mmu xon-threshold-offset pg 5 set 4
+ mmu pg-guarantee pg 5 set 6
+!
+interface FHGigabitEthernet 0/44
+!
+interface FHGigabitEthernet 0/45
+!
+interface FHGigabitEthernet 0/46
+!
+interface FHGigabitEthernet 0/47
+!
+interface FHGigabitEthernet 0/48
+!
+interface FHGigabitEthernet 0/49
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/50
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/51
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/52
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/53
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/54
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/55
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/56
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/57
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/58
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/59
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/60
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/61
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/62
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/63
+ no switchport
+ port-group 32 mode active
+!
+interface FHGigabitEthernet 0/64
+ no switchport
+ port-group 32 mode active
+!
+interface AggregatePort 32
+ no switchport
+ priority-flow-control early-warning 5 input pps 15000
+ priority-flow-control early-warning 5 output pps 15000
+ qos queue 5 ecn
+ qos queue 6 bandwidth maximum 20000000
+ wrr-queue random-detect min-threshold cell 5 1000 1000
+ wrr-queue random-detect max-threshold cell 5 2000 2000
+ wrr-queue random-detect probability 5 20 20
+ mls qos trust dscp
+ nak counting enable
+ cnp counting enable
+ ip address 169.254.0.0 255.255.255.254
+!
+interface Loopback 0
+ ip address 169.254.1.1 255.255.255.255
+!
+interface VLAN 2
+ carrier-delay 0
+ local-proxy-arp
+ ip address 10.237.3.1 255.255.255.0
+ arp l2port-down fast-delete
+ arp timeout 90
+ ip dhcp relay source 10.237.0.209
+!
+interface Mgmt 0
+ vrf forwarding MGT
+ ip address 10.237.0.209 255.255.255.0
+ gateway 10.237.0.1
+!
+router bgp 63001
+ bgp router-id 169.254.1.1
+ bgp log-neighbor-changes
+ bgp graceful-restart restart-time 120
+ bgp graceful-restart stalepath-time 360
+ bgp graceful-restart
+ neighbor 169.254.1.2 remote-as 63001
+ neighbor 169.254.1.2 update-source Loopback 0
+ address-family ipv4
+  redistribute connected
+  redistribute arp-host
+  neighbor 169.254.1.2 activate
+  exit-address-family
+!
+ntp server vrf MGT 1.1.1.1 source Mgmt 0
+!
+arp reply-auto-learning enable
+!
+ip route 169.254.1.2 255.255.255.255 169.254.0.1
+!
+snmp-server logging set-operation
+snmp-server trap-source Mgmt 0
+snmp-server enable traps
+no snmp-server enable version v1
+snmp-server enable version v2c
+snmp-server enable version v3
+snmp-server enable secret-dictionary-check
+snmp-server community 7 $10$028$2T03LpdhKUQ/lQ==$ ro 
+snmp-server community 7 $10$122$bIQFrZ1hSwQS/+ZGmw==$ ro 
+snmp-server authentication attempt 3 exceed lock-time 10
+!
+line console 0
+ login local
+line vty 0 15
+ transport input ssh 
+ logging synchronous
+ exec-timeout 0 0
+ privilege level 15
+ login local
+ width 256
+!
+end
+LG-CMC-B4R202-A01U25-RGS6980-GL0-03001#exit
+Connection to 10.237.0.209 closed.
+=== rc: 0 ===
