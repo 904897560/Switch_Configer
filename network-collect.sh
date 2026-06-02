@@ -133,7 +133,17 @@ while {[gets $fp line] >= 0} {
 }
 close $fp
 
-send -- "exit\r"
+# Log out. Vendors differ: Cisco/Ruijie use "exit", Huawei/H3C(comware) use "quit".
+# Try each, and just close the session if neither drops the connection.
+foreach quitcmd {"exit" "quit"} {
+    send -- "$quitcmd\r"
+    expect {
+        eof         { break }
+        -re $PROMPT { }
+        timeout     { }
+    }
+}
+catch {close}
 expect eof
 EOF
 
