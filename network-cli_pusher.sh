@@ -84,10 +84,16 @@ set password $env(PASSWD)
 set port     $env(PORT)
 set cmdsfile $env(CMDS_FILE)
 
-# Generic prompt: a prompt-terminating char (], #, >, $) followed by anything non-alphanumeric
-# until end-of-buffer. Tolerates trailing space, CR, LF, or ANSI escape codes.
+# Generic prompt: a run of non-space chars (hostname/path) ending in a
+# prompt-terminating char (], #, >, $) that is the LAST non-whitespace in the
+# buffer (only trailing spaces/CR/LF allowed after it).
+# This is deliberately strict: the old pattern allowed arbitrary punctuation
+# after the prompt char, so it matched a stray '>' inside the login banner
+# (SONiC's ASCII-art MOTD, e.g. the "> <" line), firing before the CLI was
+# actually ready and causing the first command (conf t) to be sent into a dead
+# prompt and lost.
 # NOTE: ']' must be the FIRST char in the class (Tcl/expect quirk: \] inside [...] is unreliable).
-set PROMPT {[]#>$][^[:alnum:]]*\Z}
+set PROMPT {[^[:space:]]*[]#>$][[:space:]]*\Z}
 
 spawn ssh -o StrictHostKeyChecking=no \
           -o UserKnownHostsFile=/dev/null \
@@ -106,19 +112,29 @@ expect {
     eof                      { puts "\n!!! connection closed"; exit 4 }
 }
 
-# After password, drain banner/MOTD then poke an extra CR to force a fresh prompt
-# anchored at the end of the buffer.
-sleep 1
-send -- "\r"
-
-expect {
-    -re $PROMPT              { }
-    -re "(?i)password:"      { puts "\n!!! auth failed"; exit 2 }
-    timeout                  { puts "\n!!! login timeout"; exit 3 }
-    eof                      { puts "\n!!! connection closed"; exit 4 }
+# After password, wait until the CLI is actually ready before sending anything.
+# Some platforms (e.g. SONiC/UXOS) print the banner/MOTD and only start the
+# interactive CLI a moment later. Poke a CR and require the prompt to come back
+# TWICE in a row (i.e. idle/stable) so we never send the first command into a
+# prompt that isn't accepting input yet. Each iteration re-arms the timeout, so
+# a slow-booting CLI is tolerated up to $TIMEOUT per poke rather than racing.
+set stable 0
+while {$stable < 2} {
+    send -- "\r"
+    expect {
+        -re $PROMPT              { incr stable }
+        -re "(?i)password:"      { puts "\n!!! auth failed"; exit 2 }
+        timeout                  { puts "\n!!! login timeout"; exit 3 }
+        eof                      { puts "\n!!! connection closed"; exit 4 }
+    }
 }
 
-# Run user commands
+# Run user commands.
+# NOTE: logging out is NOT handled here on purpose. Vendors differ
+# (Cisco/Ruijie "exit", Huawei/H3C "quit", others "logout"), so just put the
+# appropriate quit command as the last line(s) of commands.txt. The eof branch
+# below handles the case where that command drops the connection.
+set had_timeout 0
 set fp [open $cmdsfile r]
 while {[gets $fp line] >= 0} {
     set trimmed [string trim $line]
@@ -128,23 +144,17 @@ while {[gets $fp line] >= 0} {
         -re $PROMPT             { }
         -re "(?i)----( |-)*more" { send -- " "; exp_continue }
         -re "---- More ----"    { send -- " "; exp_continue }
-        timeout                 { puts "\n!!! timeout running: $trimmed" }
+        eof                     { break }
+        timeout                 { puts "\n!!! timeout running: $trimmed"; set had_timeout 1 }
     }
 }
 close $fp
 
-# Log out. Vendors differ: Cisco/Ruijie use "exit", Huawei/H3C(comware) use "quit".
-# Try each, and just close the session if neither drops the connection.
-foreach quitcmd {"exit" "quit"} {
-    send -- "$quitcmd\r"
-    expect {
-        eof         { break }
-        -re $PROMPT { }
-        timeout     { }
-    }
-}
+# Close the SSH session cleanly. If a logout command in commands.txt already
+# dropped the connection, the spawn is already gone and this is a no-op.
 catch {close}
-expect eof
+catch {wait}
+exit [expr {$had_timeout ? 5 : 0}]
 EOF
 
     local rc=$?
