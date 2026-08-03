@@ -1,6 +1,10 @@
 # 采集日志：不提交
 logs/
 
+# 现场清单：每次巡检都不一样，属于本地输入，不提交
+hosts.txt
+commands.txt
+
 # 打包产物
 *.tgz
 *.tar
