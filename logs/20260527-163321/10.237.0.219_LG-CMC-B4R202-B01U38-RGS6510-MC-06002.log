@@ -1,6 +1,0 @@
-=== host: 10.237.0.219 ===
-=== hostname: LG-CMC-B4R202-B01U38-RGS6510-MC-06002 ===
-=== time: 2026-05-27 16:33:36 ===
-=== user: admin001 ===
-spawn ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o PreferredAuthentications=password,keyboard-interactive -o PubkeyAuthentication=no -o NumberOfPasswordPrompts=1 -o ConnectTimeout=15 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -p 22 admin001@10.237.0.219
-=== rc: 130 ===

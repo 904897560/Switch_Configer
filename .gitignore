@@ -1,0 +1,19 @@
+# 采集日志：不提交
+logs/
+
+# 打包产物
+*.tgz
+*.tar
+*.tar.gz
+*.zip
+
+# 编辑器 / 工具缓存
+.history/
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
